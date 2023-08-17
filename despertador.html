@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Despertador 2</title>
+  <link href="despert.css" rel="stylesheet">
+</head>
+<body>
+  <h1>Despertador</h1>
+  <img src="relogio.png" alt="Minha Imagem">
+  
+  <label>Definir horário do despertador: <input type="time" id="alarmTime"></label>
+  <button id="setAlarm">Definir Despertador</button>
+  <button id="stopAlarm" disabled>Parar Despertador</button>
+  
+  <audio id="alarmSound" src="Alarm02.wav" preload="auto"></audio>
+  
+  <script>
+  
+   // é usado para obter uma referência a um elemento HTML específico para que possamos interagir com ele ou adicionar comportamento de clique usando JavaScript.
+
+    const alarmTimeInput = document.getElementById("alarmTime");
+    const setAlarmButton = document.getElementById("setAlarm");
+    const stopAlarmButton = document.getElementById("stopAlarm");
+    const alarmSound = document.getElementById("alarmSound");
+    let alarmTimeout;
+
+
+    setAlarmButton.addEventListener("click", () => {
+      // esse trecho de código está dizendo ao navegador para "escutar" o botão de definir alarme para um evento de clique e, quando o evento ocorrer, executar o código dentro das chaves.
+      const alarmTime = new Date();
+      //  é utilizado para obter a data e hora atuais no momento em que a linha de código é executada.
+      const [hours, minutes] = alarmTimeInput.value.split(":");
+      //está sendo utilizado para extrair as horas e minutos de um valor de entrada, que provavelmente está em um formato de horário específico.
+      alarmTime.setHours(hours, minutes, 0, 0);
+
+      const currentTime = new Date();
+      //  é utilizado para obter a data e hora atuais no momento em que a linha de código é executada.
+      const timeUntilAlarm = alarmTime - currentTime;
+
+      if (timeUntilAlarm <= 0) {
+        //  é usado para verificar se o tempo restante até o alarme
+        alert("O horário do despertador deve ser no futuro.");
+        return;
+      }
+
+      alarmTimeout = setTimeout(() => {
+        // é utilizado para agendar a execução de um bloco de código após um determinado período de tempo. 
+        alert("Despertador tocando!");
+        alarmSound.play();
+        stopAlarmButton.disabled = false;
+       // usado para ativar novamente um botão de parar o alarme que estava desativado
+      }, timeUntilAlarm);
+
+      setAlarmButton.disabled = true;
+    });
+
+    stopAlarmButton.addEventListener("click", () => {
+      //  está sendo usado para adicionar um ouvinte de evento ao botão de parar o alarme. 
+      clearTimeout(alarmTimeout);
+      alarmSound.pause();
+      alarmSound.currentTime = 0;
+      stopAlarmButton.disabled = true;
+      setAlarmButton.disabled = false;
+    });
+  </script>
+</body>
+</html>
